@@ -2,14 +2,20 @@
 
 
 namespace bmds {
-  
+ 
+/**
+ *  Partial reimplementation of std::array
+ */ 
 template<typename T, size_t N>
 class Array {
 public:
   Array();
+  Array(const Array &a);
+  virtual ~Array();
+
+  size_t size() const;
   const T operator[](size_t i) const;
   T& operator[](size_t i);
-  size_t size() const;
 
   typedef T* iterator;
   typedef const T* const_iterator;
@@ -28,6 +34,20 @@ Array<T, N>::Array()
 }
 
 template<typename T, size_t N>
+Array<T, N>::Array(const Array<T, N> &a)
+{
+  for (size_t i = 0; i < N; ++i) {
+    _buffer[i] = a._buffer[i];
+  }
+}
+
+template<typename T, size_t N>
+Array<T, N>::~Array()
+{
+}
+
+
+template<typename T, size_t N>
 const T Array<T, N>::operator[](size_t i) const
 {
   return _buffer[i];
@@ -38,6 +58,7 @@ T& Array<T, N>::operator[](size_t i)
 {
   return _buffer[i];
 }
+
 template<typename T, size_t N>
 size_t Array<T, N>::size() const
 {
@@ -47,24 +68,24 @@ size_t Array<T, N>::size() const
 template<typename T, size_t N>
 typename Array<T, N>::const_iterator Array<T, N>::begin() const
 {
-  return &_buffer[0];
+  return _buffer;
 }
 
 template<typename T, size_t N>
 typename Array<T, N>::const_iterator Array<T, N>::end() const
 {
-  return &_buffer[N-1];
+  return _buffer + N;
 }
 template<typename T, size_t N>
 typename Array<T, N>::iterator Array<T, N>::begin()
 {
-  return &_buffer[0];
+  return _buffer;
 }
 
 template<typename T, size_t N>
 typename Array<T, N>::iterator Array<T, N>::end()
 {
-  return &_buffer[N-1];
+  return _buffer + N;
 }
 
 } // namespace bmds
