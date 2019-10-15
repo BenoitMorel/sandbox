@@ -64,11 +64,24 @@ void test_bubble_sort()
   assert(std::is_sorted(v.begin(), v.end()));
 }
 
+void test_quick_sort()
+{
+  srand(42);
+  size_t size = 100000;
+  bmds::Vector<unsigned int> v(size);
+  for (auto &value: v) {
+    value = rand();
+  }
+  bmalgo::quickSort(v.begin(), v.end());    
+  assert(std::is_sorted(v.begin(), v.end()));
+}
+
 int main(int argc, char**argv)
 {
   test_array();
   test_vector();
   test_bubble_sort();
+  test_quick_sort();
   std::cout << "All tests passed successfully" << std::endl;
   return 0;
 }

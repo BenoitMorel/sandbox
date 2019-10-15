@@ -1,3 +1,5 @@
+#include <iostream>
+
 namespace bmalgo {
 
 template<typename T>
@@ -30,6 +32,12 @@ It next(It it)
   return ++it;
 }
 
+template <typename RandomAcessIt>
+RandomAcessIt previous(RandomAcessIt it)
+{
+  return --it;
+}
+
 template<typename It>
 void bubbleSort(It first, It last)
 {
@@ -44,6 +52,27 @@ void bubbleSort(It first, It last)
       }
     }
   }
+}
+
+
+template<typename RandomAcessIt>
+void quickSort(RandomAcessIt first, RandomAcessIt last)
+{
+  if (first == last || first == previous(last)) {
+    return;
+  }
+  auto pivot = previous(last);
+  for (auto currIt = first; currIt != pivot; ) {
+    if (*currIt > *pivot) {
+      iterSwap(currIt, pivot);
+      pivot = previous(pivot);
+      iterSwap(currIt, pivot);
+    } else {
+      currIt++;
+    }
+  }
+  quickSort(first, pivot);
+  quickSort(next(pivot), last);
 }
 
 
