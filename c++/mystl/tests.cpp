@@ -1,9 +1,11 @@
+#include "datastructures/array.hxx"
+#include "datastructures/vector.hxx"
+#include "algorithms/sort.hxx"
+
+#include <numeric>
 #include <iostream>
 #include <cassert>
-#include "array.hxx"
-#include "vector.hxx"
-#include <array>
-#include <numeric>
+#include <algorithm>
 
 void test_array()
 {
@@ -50,10 +52,23 @@ void test_vector()
   assert(v1.size() == 1);
 }
 
+void test_bubble_sort()
+{
+  srand(42);
+  size_t size = 1000;
+  bmds::Vector<unsigned int> v(size);
+  for (auto &value: v) {
+    value = rand();
+  }
+  bmalgo::bubbleSort(v.begin(), v.end());    
+  assert(std::is_sorted(v.begin(), v.end()));
+}
+
 int main(int argc, char**argv)
 {
   test_array();
   test_vector();
+  test_bubble_sort();
   std::cout << "All tests passed successfully" << std::endl;
   return 0;
 }
