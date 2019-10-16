@@ -11,7 +11,8 @@ public:
   Vector(const Vector<T> &vector);
   Vector(size_t size, const T &value);
   virtual ~Vector();
-
+    
+  Vector& operator=(const Vector& vector);
   const T operator[](size_t i) const;
   T& operator[](size_t i);
   size_t size() const;
@@ -28,6 +29,7 @@ public:
   void push_back(const T&t);
   void pop_back();
   void clear();
+  T &back();
 private:
   T *_buffer;
   size_t _size;
@@ -66,6 +68,16 @@ Vector<T>::Vector(size_t size, const T &value):
   for (auto &v: *this) {
     v = value;
   }
+}
+
+template<typename T>
+Vector<T>& Vector<T>::operator=(const Vector& vector)
+{
+  resize(vector.size());
+  for (size_t i = 0; i < vector.size(); ++i) {
+    (*this)[i] = vector[i];
+  }
+  return *this;
 }
 
 template<typename T>
@@ -143,6 +155,11 @@ void Vector<T>::clear()
   _capacity = 0;
 }
 
+template<typename T>
+T &Vector<T>::back()
+{
+  return _buffer[size() - 1];
+}
 
 template<typename T>
 void Vector<T>::resize(size_t newSize)

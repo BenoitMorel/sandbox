@@ -1,11 +1,43 @@
 #include "datastructures/array.hxx"
 #include "datastructures/vector.hxx"
+#include "datastructures/hashtable.hxx"
 #include "algorithms/sort.hxx"
 
 #include <numeric>
 #include <iostream>
 #include <cassert>
 #include <algorithm>
+
+
+std::string randomString(size_t length, const char charset[])
+{
+  auto randchar = []() -> char
+  {
+    const char charset[] =
+      "0123456789"
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      "abcdefghijklmnopqrstuvwxyz";
+    const size_t max_index = (sizeof(charset) - 1);
+    return charset[ rand() % max_index ];
+  };
+  std::string str(length,0);
+  std::generate_n( str.begin(), length, randchar );
+  return str;
+}
+
+std::string randomPhone(size_t length)
+{
+  const char charset[] = "0123456789";
+  return randomString(length, charset);
+}
+
+std::string randomName(size_t length)
+{
+    const char charset[] =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      "abcdefghijklmnopqrstuvwxyz";
+  return randomString(length, charset);
+}
 
 void test_array()
 {
@@ -52,6 +84,32 @@ void test_vector()
   assert(v1.size() == 1);
 }
 
+void test_hashtable()
+{
+  size_t size = 100000;
+  bmds::Vector<std::pair<std::string, std::string> > nameAndPhoneArray;
+  for (size_t i = 0; i < size; ++i) {
+    auto str1 = randomName(30);
+    auto str2 = randomPhone(10);
+    std::pair<std::string, std::string> p(str1, str2);
+    nameAndPhoneArray.push_back(p);
+  }
+  bmds::HashTable<std::string, std::string> nameToPhoneHashTable(10000);
+  for (const auto &p: nameAndPhoneArray) {
+    nameToPhoneHashTable.insert(p.first, p.second);
+  }
+  assert(nameToPhoneHashTable.size() == size);
+  for (const auto &p: nameAndPhoneArray) {
+    // this one should not have any effect
+    nameToPhoneHashTable.insert(p.first, p.second);
+  }
+  assert(nameToPhoneHashTable.size() == size);
+  for (const auto &p: nameAndPhoneArray) {
+    const auto &value = nameToPhoneHashTable[p.first];
+    assert(value == p.second);
+  }
+}
+
 void test_bubble_sort()
 {
   srand(42);
@@ -78,10 +136,13 @@ void test_quick_sort()
 
 int main(int argc, char**argv)
 {
+  test_hashtable();
+  /*
   test_array();
   test_vector();
   test_bubble_sort();
   test_quick_sort();
+  */
   std::cout << "All tests passed successfully" << std::endl;
   return 0;
 }
